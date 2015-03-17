@@ -16,9 +16,6 @@ func shouldEscape(pos int, c byte) bool {
 			return false
 		}
 	}
-	if c == ' ' {
-		return false
-	}
 	if c == '/' {
 		return false
 	}

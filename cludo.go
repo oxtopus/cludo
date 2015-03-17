@@ -2,7 +2,6 @@ package cludo
 
 import (
 	"bytes"
-	"encoding/base32"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,6 +9,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/oxtopus/cludo/systemd"
 	"github.com/oxtopus/cludo/unit"
 )
 
@@ -31,9 +31,7 @@ func Run(wd string, cliArgs []string) {
 	}
 	//defer os.RemoveAll(d)
 
-	fname := base32.StdEncoding.EncodeToString([]byte(userCommand))
-	fname = strings.TrimRight(fname, "\\=")
-	fname += ".service"
+	fname := systemd.Escape(userCommand) + ".service"
 
 	outp, err := os.Create(path.Join(d, fname))
 	if err != nil {
