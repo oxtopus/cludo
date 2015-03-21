@@ -9,16 +9,23 @@ import (
 	"path"
 	"strings"
 
+	"github.com/oxtopus/cludo/config"
 	"github.com/oxtopus/cludo/systemd"
 	"github.com/oxtopus/cludo/unit"
 )
 
 // Build Unit file from CLI params
 func Run(wd string, cliArgs []string) {
+	var config_ config.CludoConfig
+	var err error
+
+	config_, err = config.MakeConfig(wd)
+
 	unit := cludo.MakeUnit()
 
 	userCommand := strings.Join(cliArgs, " ")
-	command := fmt.Sprintf("/usr/bin/docker run cludo-base /bin/bash -c \"%s\"", userCommand)
+
+	command := fmt.Sprintf("/usr/bin/docker run %s /bin/bash -c %q", config_.BaseImage, userCommand)
 
 	unit.AddSection("Unit")
 	unit.AddItem("Unit", "Description", userCommand)
